@@ -27,3 +27,14 @@ NOTE :
 The screenshoots of completed level should be inside the dir /root/alx-system_engineering-devops/command_line_for_the_win/
 Manual QA Review
 It is your responsibility to request a review for this project from a peer. If no peers have been reviewed, you should request a review from a TA or staff member.
+
+Steps to Use SFTP for Transferring Screenshots
+1. I Took screenshots of the completed levels and saved them to a local directory.
+
+2. Then opened the terminal on my local machine.
+
+3. Next, I established an SFTP connection to the sandbox environment using the sftp command:
+    sftp username@hostname
+4. I then navigated to the directory where to upload the screenshots in the sandbox environment.
+5. Next I uploaded the machines from my local machine to the sandbox using the 'put' command and waiting for the upload to complete.
+6. I checked to comfirm files were upload using the 'ls' command before uploading to github.
