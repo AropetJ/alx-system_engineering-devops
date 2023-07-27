@@ -9,4 +9,3 @@ while read -r username uid gid gecos home shell; do
     echo "User ID: $uid"
     echo "Home Directory: $home"
 done < "/etc/passwd"
-
