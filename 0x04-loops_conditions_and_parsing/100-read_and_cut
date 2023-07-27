@@ -4,7 +4,7 @@
 IFS=":"
 
 # Read each line from /etc/passwd and extract the required fields
-while read -r username uid gid gecos home shell; do
+while IFS=":" read -r username uid _ _ home _; do
     echo "Username: $username"
     echo "User ID: $uid"
     echo "Home Directory: $home"
