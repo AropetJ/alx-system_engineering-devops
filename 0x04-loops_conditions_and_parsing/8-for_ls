@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 # A Bash script that displays, the content of the current directory
 
-for file in *; do
-    if [ -f "$file" ] && [[ "$file" == *-* ]]; then
-        name_part=$(echo "$file" | cut -d'-' -f2-)
-        echo "$name_part"
-    fi
+for file in *-*; do
+    [ -f "$file" ] && echo "${file#*-}"
 done
+
