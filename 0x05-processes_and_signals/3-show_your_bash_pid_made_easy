@@ -4,8 +4,11 @@
 # Get the current script's name
 current_script=$(basename "$0")
 
-# Get all processes containing the word "bash" in their command line, excluding the current script
-bash_processes=$(pgrep -a bash | grep -v "$current_script")
+# Get the current shell session's PID
+current_pid=$$
+
+# Get all processes containing the word "bash" in their command line, excluding the current script and the current shell session
+bash_processes=$(pgrep -a bash | grep -v "$current_script" | grep -v "$current_pid")
 
 # Display the PID and process name of each bash process
 echo "$bash_processes" | while read -r line; do
