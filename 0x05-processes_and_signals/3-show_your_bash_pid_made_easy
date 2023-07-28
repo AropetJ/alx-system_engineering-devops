@@ -1,0 +1,12 @@
+#!/bin/bash
+# Use 'pgrep' command to find PIDs of processes whose names contain the word "bash"
+
+for pid_dir in /proc/[0-9]*; do
+    pid=$(basename "$pid_dir")
+    process_name=$(cat "$pid_dir/comm")
+
+    if [[ "$process_name" == *"bash"* ]]; then
+        echo "$pid $process_name"
+    fi
+done
+
