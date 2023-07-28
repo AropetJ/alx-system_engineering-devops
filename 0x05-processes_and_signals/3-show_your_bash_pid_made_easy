@@ -1,16 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Use 'pgrep' command to find PIDs of processes whose names contain the word "bash"
 
-# Find the PIDs of processes containing the word "bash"
-bash_pids=$(pgrep -f bash)
+# Get the current script's name
+current_script=$(basename "$0")
 
-# Get the PID of the current script
-script_pid=$$
+# Get all processes containing the word "bash" in their command line, excluding the current script
+bash_processes=$(pgrep -a bash | grep -v "$current_script")
 
-# Loop through the bash PIDs and display the process name and its PID
-for pid in $bash_pids; do
-    if [ "$pid" -ne "$script_pid" ]; then
-        echo "$pid bash"
-    fi
+# Display the PID and process name of each bash process
+echo "$bash_processes" | while read -r line; do
+    pid=$(echo "$line" | awk '{print $1}')
+    process_name=$(echo "$line" | awk '{print $2}')
+    echo "$pid $process_name"
 done
 
