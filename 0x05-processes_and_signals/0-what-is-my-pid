@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# A bash script that prints it's own process ID
+
+echo $$
+
