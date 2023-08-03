@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# A Bash script that displays listening ports
+
+#!/bin/bash
+
+echo "Listening Ports:"
+echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
+
+netstat -tuln | awk '/^tcp|^udp/ {
+    split($4, local_parts, ":");
+    pid_cmd = "lsof -i :" local_parts[2] " -t";
+    pid_cmd | getline pid;
+    close(pid_cmd);
+
+    if (pid != "") {
+        cmd = "ps -o comm= -p " pid;
+        cmd | getline program_name;
+        close(cmd);
+    } else {
+        program_name = "N/A";
+    }
+
+    printf "%-4s %-7s %-7s %-23s %-23s %-11s %-7s/%s\n", $1, $2, $3, $4, $5, $6, pid, program_name;
+}'
