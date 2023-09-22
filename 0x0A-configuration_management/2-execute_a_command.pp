@@ -6,6 +6,7 @@ exec { 'killmenow':
   refreshonly => true,
 }
 
+# Notify['process_killed'] -> Exec['your_command_here'
 notify { 'process_killed':
   message => 'The "killmenow" process has been terminated.',
   before  => Exec['your_command_here'],
