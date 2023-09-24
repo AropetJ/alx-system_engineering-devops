@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+server="54.174.66.106"
+private_key="~/.ssh/school"
+
+ssh -i "$private_key" ubuntu@"$server"
+
