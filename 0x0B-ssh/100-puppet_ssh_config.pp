@@ -1,19 +1,15 @@
-# A resource type to manage SSH client configuration
-define ssh_config {
-    file_line { "ssh_config_$title":
-        path   => '/etc/ssh/ssh_config',  # Path to the SSH client config file
-        line   => $value,
-        match  => "^$title\\s",
-        ensure => present,
-  }
+# A puppet manifest to deny password authentication
+
+include stdlib
+
+file_line { "Remove password authenticatin":
+  ensure => present,
+  path   => "/etc/ssh/ssh_config",
+  line   => "PasswordAuthentication no",
 }
 
-# Configure SSH to use the private key and refuse password authentication
-ssh_config { 'IdentityFile':
-  value => 'IdentityFile ~/.ssh/school',
+file_line { "Copy private key from":
+  ensure => present,
+  path   => "/etc/ssh/ssh_config",
+  line   => "IdentityFile ~/.ssh/school"
 }
-
-ssh_config { 'PasswordAuthentication':
-  value => 'PasswordAuthentication no',
-}
-
