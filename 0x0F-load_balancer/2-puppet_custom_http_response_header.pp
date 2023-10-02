@@ -1,36 +1,31 @@
 # Update system
 exec { 'update_system':
-  command => '/usr/bin/apt-get update',
+  command     => '/usr/bin/apt-get update',
   refreshonly => true,
 }
 
-# Install Nginx
+# Install Nginx and set up the custom HTTP header
 package { 'nginx':
-  ensure => 'installed',
+  ensure  => 'installed',
   require => Exec['update_system'],
 }
 
-# Define the content for the default HTML file
 file { '/var/www/html/index.html':
   content => 'Hello World!',
   require => Package['nginx'],
 }
 
-# Configure Nginx settings
+# Configure Nginx settings using a file resource
 file { '/etc/nginx/sites-available/default':
-  ensure  => 'file',
+  ensure  => file,
   content => template('nginx/default.erb'),
   require => Package['nginx'],
-  notify  => Service['nginx'],
 }
 
-# Define custom Nginx header using Augeas
-augeas { 'nginx_custom_header':
-  context => '/files/etc/nginx/sites-available/default/http/server',
-  changes => [
-    'set add_header[last()+1] X-Served-By $hostname',
-    'save',
-  ],
+# Use Exec to append custom HTTP header
+exec { 'add_custom_header':
+  command => 'echo "    add_header X-Served-By $hostname;" >> /etc/nginx/sites-available/default',
+  unless  => 'grep -q "X-Served-By \$hostname;" /etc/nginx/sites-available/default',
   require => File['/etc/nginx/sites-available/default'],
   notify  => Service['nginx'],
 }
@@ -39,5 +34,6 @@ augeas { 'nginx_custom_header':
 service { 'nginx':
   ensure    => 'running',
   enable    => true,
-  subscribe => File['/etc/nginx/sites-available/default'],
+  require   => Package['nginx'],
+  subscribe => [File['/etc/nginx/sites-available/default'], Exec['add_custom_header']],
 }
