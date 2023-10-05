@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Configures your domain zone so that the subdomain www points to your load-balancer IP (lb-01)
+
+subdomains=("www" "lb-01" "web-01" "web-02")
+sub="$2"
+domain="$1"
+
+cmd_loop () {
+    sub="$2"
+    INFO="$(dig "$sub.$domain" | grep -A1 'ANSWER SECTION:' | awk 'NR==2')"
+    IP=$(echo "$INFO" | awk '{print $5}')
+    RECORD=$(echo "$INFO" | awk '{print $4}')
+    echo -e "The subdomain $sub is a $RECORD record and points to $IP"
+}
+
+
+if [ $# -eq 1 ]; then
+    for subs in "${subdomains[@]}"; do
+        cmd_loop "$domain" "$subs"
+    done
+elif [ $# -eq 2 ]; then
+    cmd_loop "$domain" "$sub"
+fi
+
+
