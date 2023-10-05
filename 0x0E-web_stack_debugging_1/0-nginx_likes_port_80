@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Configures nginx must be running, and listening
+# on port 80 of all the server’s active IPv4 IPs
+
+sudo cp /etc/nginx/sites-enabled/default /etc/nginx/sites-enabled/default.bak
+sudo sed -i "s/8080/80/" /etc/nginx/sites-enabled/default
+sudo service nginx restart
