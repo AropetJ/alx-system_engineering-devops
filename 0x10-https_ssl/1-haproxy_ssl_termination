@@ -1,2 +1,15 @@
-#!/usr/bin/env bash
-# 
+defaults
+  mode http
+  timeout client 15s
+  timeout connect 10s
+  timeout server 15s
+  timeout http-request 10s
+
+frontend aropetjoel-tech-frontend
+    bind *:443 ssl crt /etc/letsencrypt/live/www.aropetjoel.tech/aropetjoel.tech.pem
+    default_backend aropetjoel-tech-backend
+
+backend aropetjoel-tech-backend
+    balance roundrobin
+    server 230879-web-01 52.87.235.76:80 check
+    server 230879-web-02 54.237.109.97:80 check
