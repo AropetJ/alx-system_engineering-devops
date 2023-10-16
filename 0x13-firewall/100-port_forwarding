@@ -7,9 +7,6 @@
 #   ufw-before-output
 #   ufw-before-forward
 #
-*nat
-:PREROUTING ACCEPT [0:0]
--A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
 
 # Don't delete these required lines, otherwise there will be errors
 *filter
@@ -23,6 +20,12 @@
 # allow all on loopback
 -A ufw-before-input -i lo -j ACCEPT
 -A ufw-before-output -o lo -j ACCEPT
+
+# allow port forwarding from port 8080/tcp to 80/tcp
+*nat
+:PREROUTING ACCEPT [0:0]
+-A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
+COMMIT
 
 # quickly process packets for which we already have a connection
 -A ufw-before-input -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
