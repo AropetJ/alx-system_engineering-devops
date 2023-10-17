@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Runs a command as a nother user
+if [ "$1" ]
+    then
+    sudo -u "$1" whoami
+fi
+
