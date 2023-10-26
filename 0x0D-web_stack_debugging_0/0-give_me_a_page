@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# A script that gets apache to run
+# on a container and return "Hello Holberton"
+service apache2 start
