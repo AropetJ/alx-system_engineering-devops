@@ -2,7 +2,5 @@
 # A script that gets apache to run
 # on a container and return "Hello Holberton"
 
-sudo apt update
-sudo apt install apache2
-sudo echo "ServerName localhost" >> /etc/apache2.conf
-sudo service apache2 start
+echo "ServerName localhost" >> /etc/apache2.conf
+service apache2 start
