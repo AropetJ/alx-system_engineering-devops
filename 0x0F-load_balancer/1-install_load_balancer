@@ -1,47 +1,40 @@
 #!/usr/bin/env bash
 # configures a brand new Ubuntu machine to the requirements asked in this task
 
-if [ "$EUID" -ne 0 ]; then
-    echo "Please run this script as root or with sudo."
-    exit 1
-fi
+apt-get install -y software-properties-common
+add-apt-repository -y ppa:vbernat/haproxy-1.8
+apt-get update
+apt-get install -y haproxy=1.8.\*
 
-apt update
-apt install -y haproxy
+echo "ENABLED=1" >> /etc/default/haproxy
+mv /etc/haproxy/haproxy.cfg{,.original}
+touch /etc/haproxy/haproxy.cfg
 
-cat <<EOL > /etc/haproxy/haproxy.cfg
-global
-    log /dev/log local0
-    log /dev/log local1 notice
-    chroot /var/lib/haproxy
-    stats socket /run/haproxy/admin.sock mode 660 level admin
-    stats timeout 30s
+printf %s "global
+    log 127.0.0.1 local0 notice
+    maxconn 2000
     user haproxy
     group haproxy
-    daemon
-
 defaults
-    log global
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    retries 3
+    option redispatch
+    timeout connect  5000
+    timeout client  10000
+    timeout server  10000
+listen hbnb
+    bind 0.0.0.0:80
     mode http
-    option httplog
-    option dontlognull
-    timeout connect 5000
-    timeout client 50000
-    timeout server 50000
-
-frontend myapp
-    bind *:80
-    default_backend myapp-backend
-
-backend myapp-backend
+    stats enable
+    stats uri /haproxy?stats
     balance roundrobin
-    server web-01 [STUDENT_ID]-web-01:80 check
-    server web-02 [STUDENT_ID]-web-02:80 check
-EOL
+    option httpclose
+    option forwardfor
+    server 230879-web-01 52.87.235.76:80 check
+    server 230879-web-02 54.237.109.97:80 check
+" >> /etc/haproxy/haproxy.cfg
 
-systemctl enable haproxy
-systemctl restart haproxy
-
-systemctl status haproxy
-
-echo "HAProxy is now installed and configured."
+service haproxy start
