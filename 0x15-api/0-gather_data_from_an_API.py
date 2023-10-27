@@ -2,8 +2,8 @@
 """A script that returns information about his/her TODO list progress.
 """
 
-import sys
 import requests
+import sys
 
 url = "https://jsonplaceholder.typicode.com/"
 
