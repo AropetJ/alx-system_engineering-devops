@@ -1,29 +1,21 @@
 #!/usr/bin/python3
-"""Declares that queries an api"""
+""" raddit api"""
 
+import json
 import requests
-import sys
 
 
-def count_words(subreddit, word_list, instances={}, after="", count=0):
-    """Qeries the Reddit API, parses the title of all hot articles, and
-    prints a sorted count of given keywords
+def count_words(subreddit, word_list, after="", count=[]):
+    """count all words"""
 
-    Args:
-        word_list (list): The list of words to search for in post titles.
-        instances (obj): Key/value pairs of words/counts.
-        subreddit (str): The subreddit to search.
-        after (str): The parameter for the next page of the API results.
-        count (int): The parameter of results matched thus far.
-    """
     if after == "":
         count = [0] * len(word_list)
 
-    request = requests.get("https://www.reddit.com/r/{}/hot.json"
-                           .format(subreddit),
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    request = requests.get(url,
                            params={'after': after},
                            allow_redirects=False,
-                           headers={'user-agent': 'bhalut'})
+                           headers={'user-agent': 'Aropet_Joel'})
 
     if request.status_code == 200:
         data = request.json()
