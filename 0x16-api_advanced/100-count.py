@@ -4,6 +4,9 @@
 import json
 import requests
 
+header = {'user-agent':
+          "ubuntu:0x16.api.advanced:v1 (by /u/Aropet_Joel"}
+
 
 def count_words(subreddit, word_list, after="", count=[]):
     """count all words"""
@@ -12,10 +15,9 @@ def count_words(subreddit, word_list, after="", count=[]):
         count = [0] * len(word_list)
 
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    request = requests.get(url,
-                           params={'after': after},
+    request = requests.get(url, params={'after': after},
                            allow_redirects=False,
-                           headers={'user-agent': 'Aropet_Joel'})
+                           headers=headers)
 
     if request.status_code == 200:
         data = request.json()
