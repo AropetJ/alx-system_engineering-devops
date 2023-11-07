@@ -1,40 +1,32 @@
 #!/usr/bin/python3
-"""Declares that queries an api"""
-
+"""
+Using reddit's API
+"""
 import requests
 import sys
+after = None
 
 
-def recurse(subreddit, hot_list=[], after="", count=0):
-    """
-    Queries the Reddit API and returns a list containing the
-    titles of all hot articles for a given subreddit. If no
-    results are found for the given subreddit, the function
-    should return None.
-    """
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
-    headers = {
-        "User-Agent": "ubuntu:0x16.api.advanced:v1 (by /u/Aropet_Joel)"
-    }
-    parameters = {
-        "after": after,
-        "count": count,
-        "limit": 100
-    }
-    response = requests.get(url, headers=headers, params=parameters,
-                            allow_redirects=False)
-    if response.status_code == 404:
-        return None
+def recurse(subreddit, hot_list=[]):
+    """returning top ten post titles recursively"""
+    global after
+    user_agent = {'User-Agent': 'api_advanced-project'}
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    parameters = {'after': after}
+    results = requests.get(url, params=parameters, headers=user_agent,
+                           allow_redirects=False)
 
-    results = response.json().get("data")
-    after = results.get("after")
-    count += results.get("dist")
-    for dic in results.get("children"):
-        hot_list.append(dic.get("data").get("title"))
-
-    if after is not None:
-        return recurse(subreddit, hot_list, after, count)
-    return hot_list
+    if results.status_code == 200:
+        after_data = results.json().get("data").get("after")
+        if after_data is not None:
+            after = after_data
+            recurse(subreddit, hot_list)
+        all_titles = results.json().get("data").get("children")
+        for title_ in all_titles:
+            hot_list.append(title_.get("data").get("title"))
+        return hot_list
+    else:
+        return (None)
 
 
 if __name__ == "__main__":

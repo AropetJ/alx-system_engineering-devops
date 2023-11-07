@@ -1,23 +1,25 @@
 #!/usr/bin/python3
-""" raddit api"""
+"""Declares that queries an api"""
 
 import json
 import requests
 
-header = {'user-agent':
-          "ubuntu:0x16.api.advanced:v1 (by /u/Aropet_Joel"}
-
 
 def count_words(subreddit, word_list, after="", count=[]):
-    """count all words"""
+    """
+    Queries the Reddit API, parses the title of all hot
+    articles, and prints a sorted count of given keywords
+    """
 
     if after == "":
         count = [0] * len(word_list)
 
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    request = requests.get(url, params={'after': after},
+    parameters = {'after': after}
+    request = requests.get(url,
+                           params= parameters,
                            allow_redirects=False,
-                           headers=header)
+                           headers={'user-agent': 'Aropet_Joel'})
 
     if request.status_code == 200:
         data = request.json()
